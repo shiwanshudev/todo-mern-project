@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 const AddTodo = () => {
@@ -14,15 +16,19 @@ const AddTodo = () => {
         todo,
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         history.push("/");
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.response.data);
+      });
   };
 
   return (
     <div className="container">
       <h1 className="text-center mt-5 mb-2">Add Todo</h1>
+      <ToastContainer />
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="todo-title" className="form-label">

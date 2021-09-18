@@ -1,5 +1,7 @@
-import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useParams, useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const EditTodo = () => {
@@ -22,23 +24,32 @@ const EditTodo = () => {
       setTodo(foundTodo.data.todo);
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data);
     }
   };
 
   // update todo in db
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.post(`${process.env.REACT_APP_API_URI}/update/${id}`, {
-      title,
-      todo,
-    });
-    history.push("/");
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URI}/update/${id}`,
+        {
+          title,
+          todo,
+        }
+      );
+      history.push("/");
+    } catch (error) {
+      toast.error(error.response.data);
+    }
   };
 
   return (
     <div className="container">
       <h1 className="text-center mt-5 mb-2">Edit Todo</h1>
+      <ToastContainer />
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="todo-title" className="form-label">
